@@ -32,7 +32,7 @@ ElementSearchActivity::ElementSearchActivity(GameController * gameController, st
 	altPressed(false),
 	exit(false)
 {
-	ui::Label * title = new ui::Label(ui::Point(4, 5), ui::Point(Size.X-8, 15), "Element Search");
+	ui::Label * title = new ui::Label(ui::Point(4, 5), ui::Point(Size.X-8, 0), "Element Search (Shift+Click for description)");
 	title->SetTextColour(style::Colour::InformationTitle);
 	title->Appearance.HorizontalAlign = ui::Appearance::AlignLeft;
 	AddComponent(title);
@@ -74,6 +74,7 @@ ElementSearchActivity::ElementSearchActivity(GameController * gameController, st
 			{
 				if(a->GetFirstResult())
 					a->SetActiveTool(0, a->GetFirstResult());
+					a->exit=true;
 			}
 		};
 
@@ -168,9 +169,14 @@ void ElementSearchActivity::searchTools(std::string query)
 			break;
 	}
 }
-
+//global variable to track the old tooltip
+ui::Label * oldDesc;
 void ElementSearchActivity::SetActiveTool(int selectionState, Tool * tool)
 {
+	//create new label with tool description
+	ui::Label * newDesc = new ui::Label(ui::Point(4, 5), ui::Point(Size.X-8, 20), tool->GetDescription());
+	newDesc->Appearance.HorizontalAlign = ui::Appearance::AlignLeft;
+
 	if (ctrlPressed && shiftPressed && !altPressed)
 	{
 		Favorite::Ref().AddFavorite(tool->GetIdentifier());
@@ -181,9 +187,18 @@ void ElementSearchActivity::SetActiveTool(int selectionState, Tool * tool)
 	{
 		gameController->SetActiveTool(3, tool);
 	}
-	else
+	//swap old desc with new desc if shift is pressed
+	else if (shiftPressed && !ctrlPressed && !altPressed)
+	{
+		RemoveComponent(oldDesc);
+		AddComponent(newDesc);
+		oldDesc=newDesc;;
+	}
+	else 
+	{
 		gameController->SetActiveTool(selectionState, tool);
-	exit = true;
+		exit=true;
+	}
 }
 
 void ElementSearchActivity::OnDraw()
@@ -248,4 +263,5 @@ void ElementSearchActivity::OnKeyRelease(int key, Uint16 character, bool shift, 
 
 ElementSearchActivity::~ElementSearchActivity() {
 }
+
 
