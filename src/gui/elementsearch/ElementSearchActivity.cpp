@@ -1,5 +1,6 @@
 #include <algorithm>
 #include "ElementSearchActivity.h"
+#include "SimplifiedElementSearchActivity.h"
 #include "gui/interface/Textbox.h"
 #include "gui/interface/Label.h"
 #include "gui/interface/Keys.h"
@@ -188,7 +189,7 @@ void ElementSearchActivity::SetActiveTool(int selectionState, Tool * tool)
 		gameController->SetActiveTool(3, tool);
 	}
 	//swap old desc with new desc if shift is pressed
-	else if (shiftPressed && !ctrlPressed && !altPressed)
+	else if (SimplifiedElementSearchActivity::SwapOldDescWithNewDesc(shiftPressed, ctrlPressed, altPressed))
 	{
 		RemoveComponent(oldDesc);
 		AddComponent(newDesc);

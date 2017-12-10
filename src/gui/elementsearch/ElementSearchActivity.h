@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include "Activity.h"
+#include "SimplifiedElementSearchActivity.h"
 #include "gui/interface/Window.h"
 #include "gui/interface/Textbox.h"
 #include "gui/game/ToolButton.h"
